@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>镇江公交查询</title>
+		<meta charset="utf-8">
+		<script src="jquery.min.js" tppabs="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+		<!--url1=http://221.131.71.166:55905/Wcity/Bus/BusGPS/0/+bl+1/0?format=json;
+		url2="http://221.131.71.166:55905/Wcity/Bus/Station/0/"+"bl"+"1/0?format=json";-->
+
+		<script type="text/javascript">
+		function getJsonLength(jsonData){  
+		var jsonLength = 0;  
+		for(var item in jsonData){  
+        jsonLength++;}  
+		return jsonLength;}
+		
+		var bl;
+		function line1(t) {
+		bl=t.value;
+		$.ajax({ 
+		url:"http://221.131.71.166:55905/Wcity/Bus/BusGPS/0/"+bl+"1/0?format=json", 
+		type:'GET', 
+		dataType:'JSONP',  // 处理Ajax跨域问题
+		success: function(data){
+		var gpslist=JSON.stringify(data);
+		//alert(gpslist);
+		var obj = eval("("+gpslist+")");
+		var a=getJsonLength(data.GPSlist);
+		for(var i=0;i<a;i++){
+		   //document.write("第"+(i+1)+"辆公交车到达第:"+obj.GPSlist[i].stationNo+"站"+'<br/>');
+		   document.getElementById("result1").innerHTML+=("第"+(i+1)+"辆公交车到达第:"+obj.GPSlist[i].stationNo+"站"+'<br/>');}
+        //document.write("得到的JSON对象是："+gpslist); 
+        }
+			});
+		$.ajax({ 
+		url:"http://221.131.71.166:55905/Wcity/Bus/Station/0/"+bl+"1/0?format=json", 
+		type:'GET', 
+		dataType:'JSONP',  // 处理Ajax跨域问题
+		success: function(data){
+		var stationlist=JSON.stringify(data);
+		//alert(stationlist);
+		var obj = eval("("+stationlist+")");
+		var b=getJsonLength(data.stationlist);
+		for(var j=0;j<b;j++){
+		   //document.write("第"+(j+1)+"站是:"+obj.stationlist[j].name+'<br/>');
+		   document.getElementById("result2").innerHTML+=("第"+(j+1)+"站是:"+obj.stationlist[j].name+'<br/>');}
+        //document.write("得到的JSON对象是："+stationlist); 
+        }
+			});	
+			}
+		</script>
+
+	</head>
+	<body>
+	<div align="center" style="width:1000px;margin:0px auto;background:">
+	<p align="center"><b>【镇江公交查询】</b></p>
+	<br/>
+	<br/>
+	<div align="center" style="margin-left:0px; width:850px;">
+	请输入要查询的公交：<input name="input1" type="text" id="input1" style="width:35px" />
+	<input type="button" value="查询" onclick="line1(input1);"/>
+	<br/>
+	<div id="result1"></div>
+	<br/>
+	<div id="result2"></div>
+	</div>
+	<div style="width:100%; float:left;"> 
+	<br />
+
+	<br />
+	<p>说明：数据来源于智慧镇江App，仅仅做了一点微小的工作，输入需要查询的公交即可</p>
+
+	<br />
+
+	<p align="center">☯Open Source, Open World.☯</p>
+	<p align="center">[版权木有©盗版不究] Copyright © 2015-∞ <a href="http://52fx.top/" target="_blank">52fx.top</a> 52Fx Corporation, All Rights Reserved.</p>
+	</div>
+	</body>
+</html>
